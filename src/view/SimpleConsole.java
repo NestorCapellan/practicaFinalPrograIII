@@ -110,6 +110,9 @@ private void nuevaconversacion(){
     System.out.println(String.format("-".repeat(57)));
 }
     
+//----------------------------------------------
+//------------Gestión Conversaciones-------------
+//-----------------------------------------------
 private void menuCRUD(){
 String encabezado="-".repeat(17)+"GESTIÓN CONVERSACIONES"+"-".repeat(17);
 System.out.println(String.format("-".repeat(57)));
