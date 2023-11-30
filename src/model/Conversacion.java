@@ -149,6 +149,8 @@ public class Conversacion implements Serializable{
     
     
     //establecemos que se comparan dos conversaciones por su tiempo de inicio
+    //esto es un cambio
+    
     @Override
     public int hashCode() {
         int hash = 7;
