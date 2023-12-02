@@ -4,6 +4,7 @@
  */
 package model;
 
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -45,7 +46,9 @@ public class Conversacion implements Serializable{
     public Conversacion() {
     }
     
-  
+  //----------------------------------
+  //---------Nueva conversacion----------
+  //------------------------------------
     public final String bienvenida(){
         String textoBienvenida=String.format("¿En qué te puedo ayudar ?, %s. %s",System.getProperty("user.name"),this.nombreLLM);
         Mensaje mensajeBienvenida=new Mensaje(Instant.now());
@@ -80,6 +83,7 @@ public class Conversacion implements Serializable{
      nuevomensaje.setEmisor("Agent");
     mensajesLLM.add(nuevomensaje);
     }
+    
     public void setMensajeUsuario(String mensaje){
      Mensaje nuevomensaje=new Mensaje(Instant.now());
      nuevomensaje.setContenido(mensaje);
@@ -87,8 +91,15 @@ public class Conversacion implements Serializable{
     mensajesUsuario.add(nuevomensaje);
     }
     
-    public void ordenarConversacion(){
-      /*for(Mensaje mensaje:mensajesLLM){
+    public void setFechaFinal(Instant fechaFinal){
+        this.fechaFinal=fechaFinal.getEpochSecond();
+    }
+    //-----------------------------------------------------
+    //------------------------menu CRUD--------------------
+    //-----------------------------------------------------
+    
+    private void ordenarConversacion(){
+     /* for(Mensaje mensaje:mensajesLLM){
           System.out.println(mensaje.getLineMessage());     
       }
         System.out.println();
@@ -103,50 +114,50 @@ public class Conversacion implements Serializable{
     int cont1=0,cont2=0;
         
     //para utilizar set necesitamos que haya instaciadas como null
-    for(int i=0;i<mensajesLLM.size()+mensajesUsuario.size();i++){
-        if(i%2==0){
-         chatGeneral.set(i,mensajesLLM.get(cont1));
-         cont1++; 
-        }else{
-        chatGeneral.set(i,mensajesUsuario.get(cont2));
-        cont2++;
+        try{
+            for(int i=0;i<mensajesLLM.size()+mensajesUsuario.size();i++){
+                if(i%2==0){
+                 chatGeneral.set(i,mensajesLLM.get(cont1));
+                 cont1++; 
+                }else{
+                chatGeneral.set(i,mensajesUsuario.get(cont2));
+                cont2++;
+                }
+            }
+        }catch(ArrayIndexOutOfBoundsException ex){
+            System.err.println("ACCEDIENDO A UNA POSICION QUE NO HA SIDO INSTANCIADA"+ex.getMessage());
         }
-       
     }
-        
-    //chatGeneral.add(mensajesLLM.get(mensajesLLM.size()-1).getLineMessage());
-    }
+
+    
     public String getFechaInicioFormato() {
          LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(this.fechaInicio), ZoneId.systemDefault());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd/MM/yy: HH:mm:ss]");
         String tiempo = dateTime.format(formatter);
         return tiempo;
     }
-
-    public void setFechaFinal(Instant fechaFinal){
-        this.fechaFinal=fechaFinal.getEpochSecond();
-    }
+  
+  
     public long duracion(){
         return this.fechaFinal-this.fechaInicio;
     }
-    public ArrayList<Mensaje> getConversacionOrdenada(){
-        //no haria falta volver a llamar a ordenarConversacion
-        //porque en la vista getResumeLine va primero
-        return chatGeneral;
-}
     
     public String getResumeLine(int num){
          // llama primero a chat ordenado porque la cabecera necesita
-         // saber el numero de mensajes totales
+         // saber el numero de mensajes totales y esto pertenece a la logica de la aplicación
          // pasa el numero de la conversacion, fecha de inicio,
          // los primeros 20 caracteres de la conversacion(por diseño siempre es la misma frase de bienvenida)
          //y la duracion de la misma
-         //ordenarConversacion();
+        ordenarConversacion();
         return String.format("%3d. [%s] |Mensajes:%3d | %1.20s |Duracion: %3d seg",num 
                 ,this.getFechaInicioFormato(),chatGeneral.size(),mensajesLLM.get(0).getContenido(),this.duracion());
     }
     
-    
+    public ArrayList<Mensaje> getConversacionOrdenada(){
+        //no haria falta volver a llamar a ordenarConversacion
+        //porque en la vista getResumeLine va primero
+        return chatGeneral;
+    }
     
     //establecemos que se comparan dos conversaciones por su tiempo de inicio
     //esto es un cambio

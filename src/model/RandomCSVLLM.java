@@ -5,6 +5,7 @@
 package model;
 
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import java.nio.file.Files;
@@ -13,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 
 
 /**
@@ -35,22 +37,27 @@ import java.util.Random;
     private final ArrayList<Frase> sorpresas=new ArrayList<>();
     
   
-    private ArrayList<Frase> importar() throws Exception {
+    private ArrayList<Frase> importar(){
         //importamos las frases del csv con toda la teoria de importar de ficheros planos
-        ArrayList<Frase> frasesficha = new ArrayList<>();
+        ArrayList<Frase> frasesFicha=new ArrayList<>();
         try {
             List<String> lineas = Files.readAllLines(ruta);
             for (String linea : lineas) {
                 Frase s = Frase.getSplit(linea, delimitador);
+                //descartamos las frases que no contengan tres apartados
                 if (s != null) {
-                    frasesficha.add(s);
+                    frasesFicha.add(s);
                 }
             }
-        } catch (IOException e) {
-            throw new Exception(" No se han podido leer las lineas de CSV "+ruta.toFile().getAbsolutePath()+e.getMessage(),e);
+        }catch(FileNotFoundException e){
+         System.err.println("ERROR AL ACCEDER AL RANDOMCSV: "+e.getMessage());
+         return null;
+        }catch (IOException ex){
+        System.err.println("ERROR AL ACCEDER AL RANDOMCSV: "+ex.getMessage());
+        return null;
         }
-        return frasesficha;
-
+        
+        return frasesFicha;
     }
     
         
@@ -58,14 +65,12 @@ import java.util.Random;
     @Override
     public String speak(String intro) {
         try {
-            //va a hablar segun las frases importadas de csv
             frases=importar();
         } catch (Exception ex) {
-            return null;
+            System.err.println("ERROR AL IMPORTAR FRASES DEL RANDOMCSV"+ex.getMessage());
         }
         
-        
-        if (!frases.isEmpty()) {
+        if (!frases.isEmpty() && frases!=null) {
             ordenarFrasesPorTipos();
             //si el mensaje escrito por el usuario presenta un ? entonces
             // se contesta con una respuesta al azar

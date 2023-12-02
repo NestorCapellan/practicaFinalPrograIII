@@ -23,11 +23,12 @@ public class JLLM {
 
     /**
      * @param args the command line arguments
+     * @throws java.lang.Exception
      */
     public static void main(String[] args) throws Exception {
-       IRepository repository;//utilizamos la referencia de la interfaz
-       ApplicationView view;//utilizamos la clase abstracta
-       ILLM tipo;//utilizamos la referencia de la interfaz
+       IRepository repository;//utilizamos la referencia de la interfaz como tipo estático
+       ApplicationView view;//utilizamos la clase abstracta como tipo estático
+       ILLM tipo;//utilizamos la referencia de la interfaz como tipo estático
         
         if(args.length == 3){
             repository = getRepositoryForOption(args[0]);
@@ -55,7 +56,7 @@ public class JLLM {
                 return new ExportXML();
             case "json":
                 return new ExportJSON();
-                //la opción por defecto es exportar en
+                //la opción por defecto es exportar en Json
             default:
                 return new ExportJSON();
 

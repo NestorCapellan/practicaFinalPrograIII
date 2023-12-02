@@ -4,6 +4,7 @@
  */
 package model;
 
+import controller.Controller;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -12,7 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.file.Paths;
+import java.nio.file.Paths; 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +25,7 @@ import java.util.Comparator;
  * @author Nestor Capellan
  */
 public class Model {
+    private Controller c;
     private ILLM LLM;
     private IRepository repository;
     File ficheroEstadoSerializado;
@@ -48,6 +50,11 @@ public class Model {
         }
     }
     
+    // asociamos el controlador para comunicar errores a la vista
+    public void setController(Controller c){
+    this.c=c;
+    }
+    
   //--------------Serializacion----------------------
   //-------------------------------------------------
     public int loadInitialState() throws Exception{
@@ -59,19 +66,20 @@ public class Model {
            BufferedInputStream oif=new BufferedInputStream(fir);
            ois=new ObjectInputStream(oif);
            this.conversaciones= (ArrayList<Conversacion>) ois.readObject();
-        }catch(IOException | ClassNotFoundException ex){
-            throw new Exception("No he conseguido abrir el archivo binario: "+ex.getMessage(),ex);
+        }catch(IOException  ex){
+            c.errores("ERROR AL IMPORTAR ARCHIVO BINARIO",ex.getMessage());
         }finally{
             if(ois!=null){
                 try{
                      ois.close();
                 }catch(IOException ex){
-                    throw new Exception("No fui capaz de cerrar ObjectInputStream: "+ex.getMessage(),ex);
+                    c.errores("ERROR AL CERRAR OBJECTOUTPUTSTREAM AL IMPORTAR", ex.getMessage());
                 }
             }
         }
         return this.conversaciones.size();// devuelve el numero de conversaciones que se han tenido
     }else{
+         c.errores("No existe el archivo de deserialización");
          return -1;
     } 
     }
@@ -85,13 +93,15 @@ public class Model {
             oos=new ObjectOutputStream(oof);
             oos.writeObject(this.conversaciones);
          }catch(IOException ex){
-             throw new Exception("No he conseguido abrir el archivo binario: "+ex.getMessage(),ex);
+             c.errores("ERROR AL IEXPORTAR ARCHIVO BINARIO",ex.getMessage());
+             return "err1";
          }finally{
              if(oos!=null){
                 try{
                     oos.close();
                 }catch(IOException ex){
-                   throw new Exception("No fui capaz de cerrar ObjectOutputStream: "+ex.getMessage(),ex);
+                    c.errores("ERROR AL CERRAR OBJECTOUTPUTSTREAM AL EXPORTAR", ex.getMessage());
+                    return "err1";
                 }
              }
          }
@@ -104,26 +114,37 @@ public class Model {
 public int nuevaconversacion(){
     //añade la conversacion en último lugar
     conversaciones.add(new Conversacion(this.LLM.getIdentifier(),Instant.now()));
- 
+    
       //esto devuelve el numero de conversaciones actuales(la que se acaba de crear también)y el la vista se resta 1
     return this.conversaciones.size();
 }
 
-public String mensajeBienvenida(int num){
+public String mensajeBienvenida(int num) {
+   try{
    return conversaciones.get(num).bienvenida();
+   }catch(ArrayIndexOutOfBoundsException ex){
+       c.errores("ACCEDIENDO A CONVERSACIÓN TODAVIA NO CREADA",ex.getMessage());
+       return null;
+   }
 }
 
 public void guardarMensajeUsuario(int num,String mensaje){
- conversaciones.get(num).setMensajeUsuario(mensaje);
+  try{
+    conversaciones.get(num).setMensajeUsuario(mensaje);
+   }catch(ArrayIndexOutOfBoundsException ex){
+       c.errores("ACCEDIENDO A CONVERSACIÓN TODAVIA NO CREADA",ex.getMessage());
+   }
 }
 
 public String contestacion(int num,String mensaje){
     //el LLM nos devuelve un mensaje siguiendo una lógica y almacenamos su respuesta
    String respuesta=this.LLM.speak(mensaje);
+   if(respuesta!=null){
    conversaciones.get(num).setMensajeLLM(respuesta);
    //estamos devolviendo el mensaje sin la hora ni el nombre del emisor, no tendría mucho sentido poner la hora en un mensaje en directo,
    //solo se enseña la hora al hacer el registro
    // ademas el return devuelve el mensaje con el formato del dialogo
+   }
    return Mensaje.getMessageCSV(respuesta);
 }
 
@@ -152,15 +173,17 @@ public ArrayList<Conversacion> getConversaciones(){
     Collections.sort(copia, comparatordate);
 return copia;
 }
-public boolean eliminarConversacion(int num){
+public boolean eliminarConversacion(int num) {
     // utilizamos el metodo remove que toma como argumento un objeto y devuelve boolean
     // elimina la conversacion deseada
-    if(conversaciones.remove(conversaciones.get(num))){
-        return true;
-    }
-    else{
-        return false;
-    }
+    try{
+        conversaciones.remove(conversaciones.get(num));
+        return true;  
+    }catch(ArrayIndexOutOfBoundsException ex){
+       c.errores("ACCEDIENDO A CONVERSACIÓN TODAVIA NO CREADA",ex.getMessage());
+       return false;
+   }
+    
 } 
 
 
@@ -174,12 +197,12 @@ public String exportacionBienvenida(){
     //nos recuerda con el LLM que estamos trabajando
     return this.repository.getIdentifier();
 }
-public boolean exportarConversaciones() throws Exception{
+public boolean exportarConversaciones(){
     //nos redirigimos al metodo del LLM asociado
     return this.repository.exportar(this.conversaciones,archivoexportar);
 }
 
-public boolean importarConversaciones() throws Exception{
+public boolean importarConversaciones(){
     // implementamos las conversaciones dependiendo si ya estan o no segun su fecha de inicio con HashCode y equals
     ArrayList<Conversacion> conversacionesImportadas=this.repository.importar(archivoexportar);
     int cont=0;

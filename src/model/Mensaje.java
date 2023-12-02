@@ -4,6 +4,7 @@
  */
 package model;
 
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -39,7 +40,7 @@ public class Mensaje implements Serializable{
     //  this.contenido=contenido;
     //  }
    
-    
+   
     public String getLineMessage(){
         // Formatear la fecha y hora y la establecemos segun el formato [dd/MM/yy: HH:mm:ss]
         //devolvemos la cabecera de los mensajes en los registros

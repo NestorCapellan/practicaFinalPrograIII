@@ -50,21 +50,17 @@ public class SimpleConsole extends ApplicationView{
                 case 2: 
                     menuCRUD();
                     break;
+
                 case 3:
-                
-                    try {
-                        exportacion();
-                    } catch (Exception ex) {
-                        Logger.getLogger(SimpleConsole.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                
+                    exportacion();
                     break;
+
 
                 case 4:
                     getOut();
                     break;
                 default:
-                    System.err.println("Todavía no tenemos suficiente financiación como para tener más  opciones. Opción no disponible ");
+                    System.out.println("Todavía no tenemos suficiente financiación como para tener más  opciones. Opción no disponible ");
                     break;
             }
           
@@ -73,7 +69,7 @@ public class SimpleConsole extends ApplicationView{
     // las funciones están estipuladas private porque solo tiene sentido
     // que se acceden desde la vista y desde ningún otro sitio
  private void getOut(){ 
-        boolean salir = siOno("¿Esta seguro de que desa salir?");
+        boolean salir = yesOrNo("¿Esta seguro de que desa salir?");
         if (salir){
             System.out.println("Hasta la próxima....");
         }
@@ -87,18 +83,21 @@ private void nuevaconversacion(){
     // el cual le corresponde esa conversacion en el array de conversaciones
     // para asignar correctamente los mensajes a la conversacion correspondiente
     System.out.println(String.format("-".repeat(57)));
+    
     int aux=c.nuevaconversacion();
     // aux nos devuelve el tamaño del array de conversaciones
     int num=aux-1;
     String salir="/salir";
     String mensaje;
     System.out.println(">>>"+c.mensajeBienvenida(num));
+
     do{
         mensaje=readString_ne(">>>");
         if(!mensaje.equalsIgnoreCase(salir)){
           //mientras no sea la palabra clave para salir, guardamos cada mensaje en cada conversacion
             c.guardarMensajeUsuario(num,mensaje);
             System.out.println(c.contestacion(num,mensaje));
+            
         }
         else{
             //tambien guardamos la palabra clave y añadimos un final prefijado
@@ -119,7 +118,6 @@ System.out.println(String.format("-".repeat(57)));
 int opcion;
 do{
     System.out.println(encabezado);
-   
     System.out.println("MENU ");
     System.out.println("1-Listar conversaciones");
     System.out.println("2-Eliminar alguna conversación");
@@ -148,9 +146,7 @@ do{
 private void listarConver(){
    System.out.println();
    ArrayList<Conversacion> conversaciones=c.getConversaciones();
-   for(Conversacion conversacion:conversaciones){
-   conversacion.ordenarConversacion();
-   }
+  
    boolean ver;
    boolean salida;
    do{
@@ -166,7 +162,7 @@ private void listarConver(){
                     System.out.println(conversaciones.get(i).getResumeLine(i+1));
                 }
                 System.out.println();
-                ver=siOno("¿Desea ver alguna conversacion?");
+                ver=yesOrNo("¿Desea ver alguna conversacion?");
                 if(ver){
                     System.out.println();
                     int opcion=readInt("indica el numero de la conversacion que desea ver",1,conversaciones.size());
@@ -216,20 +212,20 @@ private void listarConver(){
             }else{
                   System.err.println("no se ha podido eliminar la conversación");
             }  
-            salir=siOno("desea eliminar alguna conversacion mas?");
+            salir=yesOrNo("desea eliminar alguna conversacion mas?");
             if(salir){
                 salida=false;
             }
             else{
                 salida=true;
             }
-            System.out.println(String.format("-".repeat(40)));
+            System.out.println(String.format("-".repeat(57)));
         }
     }while(!salida);   
 
  
  }
-private void exportacion() throws Exception{
+private void exportacion(){
     String encabezado="-".repeat(19)+"E/S CONVERSACIONES"+"-".repeat(19);System.out.println(String.format("-".repeat(57)));
     int opc;
     do{
@@ -242,8 +238,15 @@ private void exportacion() throws Exception{
         opc=readInt("introduzca la opción que desee-->");
         switch(opc){
                 case 1:
+            {
+                try {
                     exportarConversaciones();
+                } catch (Exception ex) {
+                    Logger.getLogger(SimpleConsole.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
                     break;
+
                 case 2: 
                     importarConversaciones();
                     break;
@@ -257,7 +260,7 @@ private void exportacion() throws Exception{
 
     }while(opc!=3);
 }
-private void exportarConversaciones() throws Exception{
+private void exportarConversaciones(){
     System.out.println();
     System.out.println(c.exportacionBienvenida());
     if(!c.getConversaciones().isEmpty()){
@@ -268,7 +271,7 @@ private void exportarConversaciones() throws Exception{
               
         }
         else{
-            System.err.println("No se han conseguido exportar bien");
+            System.err.println("NO SE HA CONSEGUIDO EXPORTAR BIEN");
         }
     }
     else{
@@ -276,7 +279,7 @@ private void exportarConversaciones() throws Exception{
     }
     
 }
-private void importarConversaciones() throws Exception{
+private void importarConversaciones(){
     System.out.println(c.exportacionBienvenida());
     System.out.println("Importando conversaciones.... ");
     if(c.importarConversaciones()){
@@ -284,11 +287,26 @@ private void importarConversaciones() throws Exception{
          System.out.println(String.format("Conversaciones actuales: %d",c.getConversaciones().size()));
     }
     else{
-       System.err.println("No se han conseguido importar bien");
+       System.err.println("NO SE HA CONSEGUIDO IMPORTAR BIEN");
     }
 
 }    
 
+
+//-----------------------------------------------
+//--------Excepciones por consola del modelo-----
+//-----------------------------------------------
+public void erroresSerializable(String mensajeError,String error){
+    System.err.println(mensajeError);
+    System.err.println(error);
+}
+public void erroresSerializableFichero(String mensajeError){
+     System.err.println(mensajeError);
+}
+
+
+
+        
     @Override
 public void showApplicationEnd(String endInfo) {
         String despedida="-".repeat(15)+"GRACIAS POR CHARLAR CONMIGO"+"-".repeat(15);

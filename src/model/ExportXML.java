@@ -6,6 +6,7 @@ package model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.datatype.jsr310.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,34 +21,44 @@ import java.util.List;
  */
 public class ExportXML implements IRepository {
 
+    /**
+     *
+     * @param archivo
+     * @return 
+     */
     @Override
-    public ArrayList<Conversacion> importar(File archivo) throws Exception {
+    public ArrayList<Conversacion> importar(File archivo) {
+        ArrayList<Conversacion> importaciones;
         if(archivo.isFile() && archivo.exists()){
             try {
             XmlMapper xmlMapper = new XmlMapper();
             String xml = new String(Files.readAllBytes(archivo.toPath()), StandardCharsets.UTF_8);
             // Utiliza TypeFactory para obtener el tipo de lista correcto
-            return xmlMapper.readValue(xml, xmlMapper.getTypeFactory().constructCollectionType(List.class, Conversacion.class));
+            importaciones=xmlMapper.readValue(xml, xmlMapper.getTypeFactory().constructCollectionType(List.class, Conversacion.class));
         }catch (IOException ex) {
-          throw new Exception("Se ha producido un problema al importar en XML: "+ex.getMessage(),ex);
+           System.err.println("ERROR AL IMPORTAR EN XML"+ex.getMessage());
+           return null;
         }
+        return importaciones;
         }else{
             return null;
         }
     }
 
     @Override
-    public boolean exportar(ArrayList<Conversacion> lista, File archivo) throws Exception {
+    public boolean exportar(ArrayList<Conversacion> lista, File archivo)  {
          try {
             XmlMapper xmlMapper = new XmlMapper();
             String xml = xmlMapper.writeValueAsString(lista);
             Files.write(archivo.toPath(), xml.getBytes(StandardCharsets.UTF_8));
             return true;
         } catch (JsonProcessingException ex) {
-          throw new Exception("Se ha producido un problema al exportar en XML: "+ex.getMessage(),ex);
+             System.err.println("ERROR AL EXPORTAR EN XML"+ex.getMessage());
+             return false;
         } catch (IOException ex) {
-            throw new Exception("Se ha producido un problema al exportar en XML: "+ex.getMessage(),ex);
-        }
+             System.err.println("ERROR AL EXPORTAR EN XML"+ex.getMessage());
+             return false;
+        }             
   }
     @Override
     public String getIdentifier() {

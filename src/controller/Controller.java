@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import model.Conversacion;
 import model.Model;
 import view.ApplicationView;
+import view.SimpleConsole;
 
 /**
  *
@@ -20,9 +21,10 @@ public class Controller {
     public Controller(Model model, ApplicationView view) {
         this.model = model;
         this.view = view;
+        this.model.setController(this);
         view.setController(this);
     }
-    
+   
     public void initApplication() throws Exception{
         //el grueso del programa está en esta función
         // aqui se carga la informacion registrada en usos 
@@ -36,11 +38,8 @@ public class Controller {
             view.showApplicationStart("No se han cargado conversaciones antiguas porque nunca hemos hablado o se han eliminado todas");
     }
     else{
-            view.showApplicationStart("no se han cargado conversaciones antiguas porque "
-                    + "no existe el archivo");
+        view.showApplicationStart("ERROR AL CARGAR SERIALIZACION");
     }
-   
-   
    
     view.showMainMenu();
     
@@ -54,6 +53,22 @@ public class Controller {
     }
 }
 
+  //---------exccepciones-------------
+  //--------------------------------------
+    
+    //Al acceder a métodos específicos de esa vista, tenemos que hacer un casting
+   public void errores(String mensajeError,String error){
+    SimpleConsole simpleConsole=(SimpleConsole)this.view;
+   simpleConsole.erroresSerializable(mensajeError, error);
+   }  
+    
+   public void errores(String mensajeError){
+   SimpleConsole simpleConsole=(SimpleConsole)this.view;
+   simpleConsole.erroresSerializableFichero(mensajeError);
+   }
+    
+    
+    
   //---------nuevaconversaion-------------
   //--------------------------------------
 public int nuevaconversacion(){
@@ -94,11 +109,11 @@ return model.eliminarConversacion(num);
 public String exportacionBienvenida(){
 return model.exportacionBienvenida();
 }
-public boolean exportarConversaciones() throws Exception{
+public boolean exportarConversaciones(){
 return model.exportarConversaciones();
 }
 
-public boolean importarConversaciones() throws Exception{
+public boolean importarConversaciones(){
 return model.importarConversaciones();
 }
 public String getRutaArchivoExportado(){
