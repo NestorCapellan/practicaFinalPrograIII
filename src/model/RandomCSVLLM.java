@@ -42,8 +42,9 @@ import java.util.Random;
         ArrayList<Frase> frasesFicha=new ArrayList<>();
         try {
             List<String> lineas = Files.readAllLines(ruta);
-            for (String linea : lineas) {
-                Frase s = Frase.getSplit(linea, delimitador);
+            //no tomamos la primera linea
+            for (int i=1;i<lineas.size();i++) {
+                Frase s = Frase.getSplit(lineas.get(i), delimitador);
                 //descartamos las frases que no contengan tres apartados
                 if (s != null) {
                     frasesFicha.add(s);

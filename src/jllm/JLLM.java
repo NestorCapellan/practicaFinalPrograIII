@@ -5,6 +5,7 @@
 package jllm;
 
 import controller.Controller;
+import io.github.jonelo.jAdapterForNativeTTS.engines.exceptions.SpeechEngineCreationException;
 import model.ExportJSON;
 import model.ExportXML;
 import model.FakeLLM;
@@ -14,6 +15,7 @@ import model.Model;
 import model.RandomCSVLLM;
 import view.ApplicationView;
 import view.SimpleConsole;
+import view.TTS;
 
 /**
  *
@@ -23,9 +25,9 @@ public class JLLM {
 
     /**
      * @param args the command line arguments
-     * @throws java.lang.Exception
+     * @throws io.github.jonelo.jAdapterForNativeTTS.engines.exceptions.SpeechEngineCreationException
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws SpeechEngineCreationException {
        IRepository repository;//utilizamos la referencia de la interfaz como tipo estático
        ApplicationView view;//utilizamos la clase abstracta como tipo estático
        ILLM tipo;//utilizamos la referencia de la interfaz como tipo estático
@@ -76,11 +78,13 @@ public class JLLM {
     
     }
 
-    private static ApplicationView getViewForoption(String argumento) {
+    private static ApplicationView getViewForoption(String argumento) throws SpeechEngineCreationException {
         switch (argumento) {
             case "consola":
                 return new SimpleConsole();
                 //la opcion por defecto el la interfaz de consola simple
+            case "TTS":
+                return new TTS();
             default:
                 return new SimpleConsole();
         }

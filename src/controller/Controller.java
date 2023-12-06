@@ -25,7 +25,7 @@ public class Controller {
         view.setController(this);
     }
    
-    public void initApplication() throws Exception{
+    public void initApplication(){
         //el grueso del programa está en esta función
         // aqui se carga la informacion registrada en usos 
         //anteriores (persistencia), se ejecuta el programa
@@ -78,17 +78,17 @@ public String mensajeBienvenida(int num){
 return model.mensajeBienvenida(num);
 }
 
-public String contestacion(int num,String mensaje) {
+public String contestacion(int num,String mensaje)throws ArrayIndexOutOfBoundsException {
 return model.contestacion(num,mensaje);
 }
-public void setEndConversacion(int num){
-model.setEndConversacion(num);
+public void setFinalConversacion(int num)throws ArrayIndexOutOfBoundsException{
+model.setFinalConversacion(num);
 }
 
 public String mensajeDespedida(int num){
 return model.mensajeDespedida(num);
 }
-public void guardarMensajeUsuario(int num,String mensaje){
+public void guardarMensajeUsuario(int num,String mensaje) throws ArrayIndexOutOfBoundsException{
 model.guardarMensajeUsuario(num,mensaje);
 }
 

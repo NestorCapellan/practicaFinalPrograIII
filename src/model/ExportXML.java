@@ -4,16 +4,24 @@
  */
 package model;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.datatype.jsr310.*;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+//import com.fasterxml.jackson.datatype.jsr310.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  *
@@ -28,18 +36,22 @@ public class ExportXML implements IRepository {
      */
     @Override
     public ArrayList<Conversacion> importar(File archivo) {
-        ArrayList<Conversacion> importaciones;
+        
         if(archivo.isFile() && archivo.exists()){
             try {
-            XmlMapper xmlMapper = new XmlMapper();
+                ObjectMapper mapper = new XmlMapper();
+                        //.builder()
+                //.addModule(new JavaTimeModule())
+                //.build();
+           
             String xml = new String(Files.readAllBytes(archivo.toPath()), StandardCharsets.UTF_8);
             // Utiliza TypeFactory para obtener el tipo de lista correcto
-            importaciones=xmlMapper.readValue(xml, xmlMapper.getTypeFactory().constructCollectionType(List.class, Conversacion.class));
+            return mapper.readValue(xml, mapper.getTypeFactory().constructCollectionType(ArrayList.class, Conversacion.class));
         }catch (IOException ex) {
-           System.err.println("ERROR AL IMPORTAR EN XML"+ex.getMessage());
+            ex.printStackTrace();
+           System.err.println("ERROR AL IMPORTAR EN XML: "+ex.getMessage());
            return null;
         }
-        return importaciones;
         }else{
             return null;
         }
@@ -53,10 +65,12 @@ public class ExportXML implements IRepository {
             Files.write(archivo.toPath(), xml.getBytes(StandardCharsets.UTF_8));
             return true;
         } catch (JsonProcessingException ex) {
-             System.err.println("ERROR AL EXPORTAR EN XML"+ex.getMessage());
+             ex.printStackTrace();
+             System.err.println("ERROR AL EXPORTAR EN XML: "+ex.getMessage());
              return false;
         } catch (IOException ex) {
-             System.err.println("ERROR AL EXPORTAR EN XML"+ex.getMessage());
+            ex.printStackTrace();
+             System.err.println("ERROR AL EXPORTAR EN XML: "+ex.getMessage());
              return false;
         }             
   }
@@ -65,6 +79,5 @@ public class ExportXML implements IRepository {
         return "Ha elegido exportar o importar en formato XML";
     }
 
-    
-    
+
 }

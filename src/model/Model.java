@@ -57,17 +57,19 @@ public class Model {
     
   //--------------Serializacion----------------------
   //-------------------------------------------------
-    public int loadInitialState() throws Exception{
+    public int loadInitialState(){
         // haremos distinción entre las excepciones
     if(ficheroEstadoSerializado.exists() && ficheroEstadoSerializado.isFile()){
             ObjectInputStream ois=null;
-        try{
+        try{ 
            FileInputStream fir= new FileInputStream(ficheroEstadoSerializado);
            BufferedInputStream oif=new BufferedInputStream(fir);
            ois=new ObjectInputStream(oif);
            this.conversaciones= (ArrayList<Conversacion>) ois.readObject();
         }catch(IOException  ex){
             c.errores("ERROR AL IMPORTAR ARCHIVO BINARIO",ex.getMessage());
+        }catch(ClassNotFoundException ex){
+         c.errores("ERROR AL IMPORTAR ARCHIVO BINARIO",ex.getMessage());
         }finally{
             if(ois!=null){
                 try{
@@ -84,7 +86,7 @@ public class Model {
     } 
     }
     
-    public String loadFinalState() throws Exception{
+    public String loadFinalState(){
      // haremos distinción entre las excepciones
         ObjectOutputStream oos=null;
         try{
@@ -113,48 +115,53 @@ public class Model {
     //----------------------------------------------
 public int nuevaconversacion(){
     //añade la conversacion en último lugar
-    conversaciones.add(new Conversacion(this.LLM.getIdentifier(),Instant.now()));
+    conversaciones.add(new Conversacion(this.LLM.getIdentifier(),Instant.now().getEpochSecond()));
     
       //esto devuelve el numero de conversaciones actuales(la que se acaba de crear también)y el la vista se resta 1
     return this.conversaciones.size();
 }
 
 public String mensajeBienvenida(int num) {
-   try{
-   return conversaciones.get(num).bienvenida();
-   }catch(ArrayIndexOutOfBoundsException ex){
-       c.errores("ACCEDIENDO A CONVERSACIÓN TODAVIA NO CREADA",ex.getMessage());
-       return null;
-   }
+    try{
+    return conversaciones.get(num).bienvenida();
+    }catch(ArrayIndexOutOfBoundsException ex){
+    c.errores("Capturada excepcion "+ex.getMessage());
+    }
+   return null;
 }
 
-public void guardarMensajeUsuario(int num,String mensaje){
-  try{
-    conversaciones.get(num).setMensajeUsuario(mensaje);
-   }catch(ArrayIndexOutOfBoundsException ex){
-       c.errores("ACCEDIENDO A CONVERSACIÓN TODAVIA NO CREADA",ex.getMessage());
-   }
+public void guardarMensajeUsuario(int num,String mensaje) throws ArrayIndexOutOfBoundsException{
+    conversaciones.get(num).setMensajesUsuario(mensaje);
+   
+       
 }
 
-public String contestacion(int num,String mensaje){
+public String contestacion(int num,String mensaje) throws ArrayIndexOutOfBoundsException{
     //el LLM nos devuelve un mensaje siguiendo una lógica y almacenamos su respuesta
    String respuesta=this.LLM.speak(mensaje);
    if(respuesta!=null){
-   conversaciones.get(num).setMensajeLLM(respuesta);
+   conversaciones.get(num).setMensajesLLM(respuesta);
    //estamos devolviendo el mensaje sin la hora ni el nombre del emisor, no tendría mucho sentido poner la hora en un mensaje en directo,
    //solo se enseña la hora al hacer el registro
    // ademas el return devuelve el mensaje con el formato del dialogo
+  
    }
-   return Mensaje.getMessageCSV(respuesta);
+   return Mensaje.setMessage(respuesta);
 }
 
 public String mensajeDespedida(int num){
-   return conversaciones.get(num).despedida();
+    try{
+    return conversaciones.get(num).despedida();
+    }catch(ArrayIndexOutOfBoundsException ex){
+    c.errores("Capturada excepcion "+ex.getMessage());
+    }
+   return null;
 }
 
-public void setEndConversacion(int num){
+public void setFinalConversacion(int num)throws ArrayIndexOutOfBoundsException{
     //establece cuando ha terminado la conversacion para calcular la duración
-    conversaciones.get(num).setFechaFinal(Instant.now());
+    conversaciones.get(num).setFechaFinal(Instant.now().getEpochSecond());
+    
 }
 
     
@@ -198,13 +205,14 @@ public String exportacionBienvenida(){
     return this.repository.getIdentifier();
 }
 public boolean exportarConversaciones(){
-    //nos redirigimos al metodo del LLM asociado
-    return this.repository.exportar(this.conversaciones,archivoexportar);
+    //nos redirigimos al metodo del LLM asociadoy exportamos las conversaciones ordenadas en el tiempo
+    
+    return this.repository.exportar(this.getConversaciones(),archivoexportar);
 }
 
 public boolean importarConversaciones(){
     // implementamos las conversaciones dependiendo si ya estan o no segun su fecha de inicio con HashCode y equals
-    ArrayList<Conversacion> conversacionesImportadas=this.repository.importar(archivoexportar);
+    ArrayList<Conversacion> conversacionesImportadas=this.repository.importar(archivoimportar);
     int cont=0;
     if(conversacionesImportadas!=null){
             for(Conversacion conversacionImportada:conversacionesImportadas){

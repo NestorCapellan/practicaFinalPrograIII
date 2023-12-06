@@ -5,6 +5,7 @@
 package model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -18,15 +19,14 @@ import java.time.format.DateTimeFormatter;
  */
 public class Mensaje implements Serializable{
     private String emisor;
-    private  long fecha;
+    private long fechaInicioMensaje;
     private String contenido;
-    
     private static final long serialVersionUID=-87008705013848912L;
  
 
-    public Mensaje(Instant fecha) {
+    public Mensaje(long fecha) {
         //establecemos el momento de ejecucion del constructor mensaje
-        this.fecha = fecha.getEpochSecond();
+        this.fechaInicioMensaje = fecha;
     }
     //contructor sin atributos para importar de XML
     public Mensaje() {
@@ -41,30 +41,20 @@ public class Mensaje implements Serializable{
     //  }
    
    
-    public String getLineMessage(){
-        // Formatear la fecha y hora y la establecemos segun el formato [dd/MM/yy: HH:mm:ss]
-        //devolvemos la cabecera de los mensajes en los registros
-        LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(this.fecha), ZoneId.systemDefault());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd/MM/yy: HH:mm:ss]");
-        String tiempoFormateado = dateTime.format(formatter);
-        return String.format("%s [%s]: %s",this.emisor,tiempoFormateado,this.contenido);
-    }
     
-    public static String getMessageCSV(String mensaje){
+    public static String setMessage(String mensaje){
     // metodo estatico que se aplica a la representacion en la conversacion
     //se aplica tanto a los mesajes del usuario como a los de la maquina
     return ">>> "+mensaje;
     }
-    //seters y getters
+    // getters importantes a la hora de
+    // importar en xml para reconocer cuales son los atributos
+    
 
     public String getEmisor() {
         return emisor;
     }
-
-    public double getFecha() {
-        return fecha;
-    }
-
+   
     public String getContenido() {
         return contenido;
     }
@@ -73,14 +63,30 @@ public class Mensaje implements Serializable{
         this.emisor = emisor;
     }
 
-    public void setFecha(Instant fecha) {
-        this.fecha = fecha.getEpochSecond();
-    }
+   
 
     public void setContenido(String contenido) {
         this.contenido = contenido;
     }
    
+     
+    public long getFechaInicioMensaje() {
+        return this.fechaInicioMensaje;
+    }
+     public void setFecha(long  fecha) {
+        this.fechaInicioMensaje = fecha;
+    }
     
+    @JsonIgnore
+    public String getLineMessage(){
+        // Formatear la fecha y hora y la establecemos segun el formato [dd/MM/yy: HH:mm:ss]
+        //devolvemos la cabecera de los mensajes en los registros
+        LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(this.fechaInicioMensaje), ZoneId.systemDefault());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd/MM/yy: HH:mm:ss]");
+        String tiempoFormateado = dateTime.format(formatter);
+        return String.format("%s [%s]: %s",this.emisor,tiempoFormateado,this.contenido);
+    }
+
+  
     
 }

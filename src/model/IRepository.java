@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public interface IRepository {
      // todos los métodos de una interfaz son públicos y abstractos
     //por tanto es redundante declararlos como public y abstract
-    public abstract ArrayList<Conversacion> importar (File archivo);
+    public abstract ArrayList<Conversacion> importar (File archivo) ;
     public abstract boolean  exportar(ArrayList<Conversacion> lista,File archivo);
     public abstract String getIdentifier();
 }

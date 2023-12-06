@@ -26,16 +26,10 @@ public class ExportJSON implements IRepository{
     //por definición todos los métodos de una interfaz
     //son abstractos y en los métodos abstractos no es
     //necesario escribir @Override 
-
-    /**
-     *
-     * @param archivo
-     * @return
-     */
     
     
     @Override
-    public ArrayList<Conversacion> importar(File archivo)  {
+    public ArrayList<Conversacion> importar(File archivo){
         ArrayList<Conversacion> importaciones;
         if(archivo.isFile() && archivo.exists()){
              try{
@@ -44,10 +38,10 @@ public class ExportJSON implements IRepository{
                 Type tipoDeLista = new TypeToken<List<Conversacion>>() {}.getType();
                 importaciones=gson.fromJson(json, tipoDeLista);
                 }catch (FileNotFoundException ex) {
-                    System.err.println("ERROR AL EXPORTAR A JSON"+ex.getMessage());
+                    System.err.println("ERROR AL EXPORTAR A JSON "+ex.getMessage());
                     return null; 
                 }catch(IOException e){
-                    System.err.println("ERROR AL IMPORTAR A JSON"+e.getMessage());
+                    System.err.println("ERROR AL IMPORTAR A JSON "+e.getMessage());
                     return null;
                 }
         return importaciones;
@@ -59,17 +53,17 @@ public class ExportJSON implements IRepository{
 
      
     @Override
-    public boolean exportar(ArrayList<Conversacion> lista,File archivo)  {
+    public boolean exportar(ArrayList<Conversacion> lista,File archivo) {
         try {
                 Gson gson = new Gson();
                 String json = gson.toJson(lista);
                 Files.write(archivo.toPath(), json.getBytes(StandardCharsets.UTF_8));
                 return true;
             }catch (FileNotFoundException ex) {
-                System.err.println("ERROR AL EXPORTAR A JSON"+ex.getMessage());
+                System.err.println("ERROR AL EXPORTAR A JSON "+ex.getMessage());
                 return false; 
              }catch (IOException ex){
-                System.err.println("ERROR AL EXPORTAR A JSON"+ex.getMessage());
+                System.err.println("ERROR AL EXPORTAR A JSON "+ex.getMessage());
                 return false;
             }
     }

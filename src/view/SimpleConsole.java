@@ -6,8 +6,6 @@ package view;
 
 import static com.coti.tools.Esdia.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.Conversacion;
 import model.Mensaje;
 /**
@@ -31,17 +29,22 @@ public class SimpleConsole extends ApplicationView{
     //---------------------------------------
     @Override
     public void showMainMenu() {
+        ArrayList<String> opciones=new ArrayList<>();
         int opcion;
         String menu="-".repeat(19)+"MENU PRINCIPAL JLLM"+"-".repeat(19);
+        opciones.add("pulse 1 para: Nueva conversacion");
+        opciones.add("pulse 2 para: Gestión de conversaciones");
+        opciones.add("pulse 3 para: Exportación o importación");
+        opciones.add("pulse 4 para: terminar con jLLM");
+        
         do{
            
             System.out.println();
             System.out.println(menu);
              System.out.println(String.format("-".repeat(57)));
-            System.out.println("pulse 1 para: Nueva conversacion");
-            System.out.println("pulse 2 para: Gestión de conversaciones");
-            System.out.println("pulse 3 para: Exportación o importación");
-            System.out.println("pulse 4 para: terminar con jLLM");
+            for(String opc:opciones){
+            System.out.println(opc);
+            }
             opcion=readInt("introduce la opción que desee-->");
             switch(opcion){
                 case 1:
@@ -68,7 +71,7 @@ public class SimpleConsole extends ApplicationView{
     }
     // las funciones están estipuladas private porque solo tiene sentido
     // que se acceden desde la vista y desde ningún otro sitio
- private void getOut(){ 
+ protected void getOut(){ 
         boolean salir = yesOrNo("¿Esta seguro de que desa salir?");
         if (salir){
             System.out.println("Hasta la próxima....");
@@ -78,7 +81,7 @@ public class SimpleConsole extends ApplicationView{
 //---------------------------------------
 //------------nueva conversacion-------------
 //---------------------------------------
-private void nuevaconversacion(){
+protected void nuevaconversacion(){
     // creamos una nueva conversacion y nos devuelve el número 
     // el cual le corresponde esa conversacion en el array de conversaciones
     // para asignar correctamente los mensajes a la conversacion correspondiente
@@ -95,14 +98,30 @@ private void nuevaconversacion(){
         mensaje=readString_ne(">>>");
         if(!mensaje.equalsIgnoreCase(salir)){
           //mientras no sea la palabra clave para salir, guardamos cada mensaje en cada conversacion
-            c.guardarMensajeUsuario(num,mensaje);
+            try{
+                c.guardarMensajeUsuario(num,mensaje);
+            }catch(ArrayIndexOutOfBoundsException ex){
+                System.err.println("No existe la conversacion "+ex.getMessage());
+            }
+            try{
             System.out.println(c.contestacion(num,mensaje));
+            }catch(ArrayIndexOutOfBoundsException ex){
+                System.err.println("No existe la conversacion "+ex.getMessage());
+            }
             
         }
         else{
             //tambien guardamos la palabra clave y añadimos un final prefijado
-            c.guardarMensajeUsuario(num,mensaje);
-            c.setEndConversacion(num);
+           try{
+                c.guardarMensajeUsuario(num,mensaje);
+            }catch(ArrayIndexOutOfBoundsException ex){
+                System.err.println("No existe la conversacion "+ex.getMessage());
+            }
+           try{
+              c.setFinalConversacion(num);
+           }catch(ArrayIndexOutOfBoundsException ex){
+                System.err.println("No existe la conversacion "+ex.getMessage());
+           }
         }
     }while(!mensaje.equalsIgnoreCase(salir));
     System.out.println(">>>"+c.mensajeDespedida(num));
@@ -113,7 +132,7 @@ private void nuevaconversacion(){
 //------------Gestión Conversaciones-------------
 //-----------------------------------------------
 private void menuCRUD(){
-String encabezado="-".repeat(17)+"GESTIÓN CONVERSACIONES"+"-".repeat(17);
+String encabezado="-".repeat(117)+"GESTIÓN CONVERSACIONES"+"-".repeat(17);
 System.out.println(String.format("-".repeat(57)));
 int opcion;
 do{
@@ -143,7 +162,7 @@ do{
 }
 
 
-private void listarConver(){
+protected void listarConver(){
    System.out.println();
    ArrayList<Conversacion> conversaciones=c.getConversaciones();
   
@@ -170,7 +189,7 @@ private void listarConver(){
                     // las listas por consola estan listadas empezando por 1
                     System.out.println(String.format("| Conversacion del %s |",conversaciones.get(opcion-1).getFechaInicioFormato()));
                     System.out.println(String.format("-".repeat(57)));
-                        for(Mensaje mensaje:conversaciones.get(opcion-1).getConversacionOrdenada()){
+                        for(Mensaje mensaje:conversaciones.get(opcion-1).getChatGeneral()){
                              System.out.println(mensaje.getLineMessage());
                         }  
                     salida=false;
@@ -189,7 +208,7 @@ private void listarConver(){
     
  }   
     
- private void eliminarConver(){
+ protected void eliminarConver(){
    
     boolean salir;
     boolean salida;
@@ -238,13 +257,7 @@ private void exportacion(){
         opc=readInt("introduzca la opción que desee-->");
         switch(opc){
                 case 1:
-            {
-                try {
                     exportarConversaciones();
-                } catch (Exception ex) {
-                    Logger.getLogger(SimpleConsole.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
                     break;
 
                 case 2: 
@@ -260,7 +273,7 @@ private void exportacion(){
 
     }while(opc!=3);
 }
-private void exportarConversaciones(){
+protected void exportarConversaciones(){
     System.out.println();
     System.out.println(c.exportacionBienvenida());
     if(!c.getConversaciones().isEmpty()){
@@ -279,7 +292,7 @@ private void exportarConversaciones(){
     }
     
 }
-private void importarConversaciones(){
+protected void importarConversaciones(){
     System.out.println(c.exportacionBienvenida());
     System.out.println("Importando conversaciones.... ");
     if(c.importarConversaciones()){

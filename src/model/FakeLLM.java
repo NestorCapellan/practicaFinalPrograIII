@@ -20,7 +20,7 @@ public class FakeLLM implements ILLM{
         String[] saludostipos={"Hola, encantado","Buenos días","Buenas tardes","Qué día más espléndido"};
         String[] afirmacionestipos={"si","pues si","vaya que sí","no tenía ni idea","debe ser que sí"};
         String[] negacionestipos={"no","pues no","ni idea","de ninguna manera","debe ser que no","jamas"};
-        String[] datostipos={"Sé hablar más de 300 idiomas","puedo hacer cualquier tipo de cálculos","mañana saldra el Sol","es de día o de noche","seguramente saques buena nota"};
+        String[] datostipos={"Sé hablar más de 300 idiomas","puedo hacer cualquier tipo de cálculos","mañana saldra el Sol","es de día o es de noche","seguramente saques buena nota"};
         String[] despedidastipos={"un placer","hasta luego","seguro que volvemos a hablar"};
     @Override
     public String speak(String intro) {

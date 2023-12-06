@@ -39,7 +39,7 @@ public class Frase {
         Frase f=new Frase(tipoFrase,extension,contenido);
         return f;      
     }catch(NumberFormatException e){
-        System.err.println("FALLO AL HACER PARSE EN LA FRASE IMPORTADA"+e.getMessage());
+        System.err.println("FALLO AL HACER PARSE EN LA FRASE IMPORTADA "+e.getMessage());
         return null;
     
     }

@@ -5,6 +5,7 @@
 package model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -20,9 +21,7 @@ import java.util.ArrayList;
 public class Conversacion implements Serializable{
     
   private String nombreLLM;
-  private ArrayList<Mensaje> mensajesLLM;
-  private ArrayList<Mensaje> mensajesUsuario;
-  private ArrayList<Mensaje> chatGeneral;
+  private ArrayList<Mensaje> chatGeneral=new ArrayList<>();;
   private  long fechaInicio;
   private  long fechaFinal;
   
@@ -35,15 +34,14 @@ public class Conversacion implements Serializable{
   // ademas vamos a ir alamacenando los mensajes del usuario en un array y los del LLM en
   //otro, para más tarde introducirlos ordenados en el array ChatGeneral
   
-    public Conversacion(String nombreLLM,Instant inicio){
+    public Conversacion(String nombreLLM,long inicio){
         this.nombreLLM = nombreLLM;
-        this.fechaInicio=inicio.getEpochSecond();
-        mensajesLLM=new ArrayList<>();
-        mensajesUsuario=new ArrayList<>();
-        chatGeneral=new ArrayList<>();
+        this.fechaInicio=inicio;
+        
     }
     //necesitamos un constructor sin atributos para importar en XML
     public Conversacion() {
+       
     }
     
   //----------------------------------
@@ -51,116 +49,69 @@ public class Conversacion implements Serializable{
   //------------------------------------
     public final String bienvenida(){
         String textoBienvenida=String.format("¿En qué te puedo ayudar ?, %s. %s",System.getProperty("user.name"),this.nombreLLM);
-        Mensaje mensajeBienvenida=new Mensaje(Instant.now());
+        Mensaje mensajeBienvenida=new Mensaje(Instant.now().getEpochSecond());
         mensajeBienvenida.setContenido(textoBienvenida);
         mensajeBienvenida.setEmisor("Agent");
-        mensajesLLM.add(mensajeBienvenida);
+        chatGeneral.add(mensajeBienvenida);
         return textoBienvenida;
     }
     
     public final String despedida(){
         String textoDespedida=String.format("Ha sido un placer hablar contigo, %s",System.getProperty("user.name"));
-        Mensaje mensajeDespedida=new Mensaje(Instant.now());
+        Mensaje mensajeDespedida=new Mensaje(Instant.now().getEpochSecond());
         mensajeDespedida.setContenido(textoDespedida);
         mensajeDespedida.setEmisor("Agent");
-        mensajesLLM.add(mensajeDespedida);
-        // como siempre es el ultimo mensaje que se va almacena en el chat lo que hacemos es crear aqui 
-        //el numero de posiciones null totales del chat que necesitaremos para el metodo set del ArrayList
-        //tambien se podria utilizar el método de ArrayList add(int i,Object ob) que añade el objeto en la posicion i
-         for(int i=0;i<mensajesLLM.size()+mensajesUsuario.size();i++){
-         chatGeneral.add(null);
-        }
+        chatGeneral.add(mensajeDespedida);
         return textoDespedida;
     }
     
-   
-    
-    public void setMensajeLLM(String mensaje){
+   //observemos que segun nuestra arquitectura de la vista, los mensajes se van a ir añadiendo al chatGeneral
+    // ya ordenados en el tiempo
+    public void setMensajesLLM(String mensaje){
      //También se podria establecer por constructor
-     //Mensaje("Agent",Instant.now(),mensaje);
-     Mensaje nuevomensaje=new Mensaje(Instant.now());
+     //Mensaje("Agent",Instant.now().getEpochSecond(),mensaje);
+     Mensaje nuevomensaje=new Mensaje(Instant.now().getEpochSecond());
      nuevomensaje.setContenido(mensaje);
      nuevomensaje.setEmisor("Agent");
-    mensajesLLM.add(nuevomensaje);
+    chatGeneral.add(nuevomensaje);
     }
-    
-    public void setMensajeUsuario(String mensaje){
-     Mensaje nuevomensaje=new Mensaje(Instant.now());
+    public void setMensajesUsuario(String mensaje){
+     Mensaje nuevomensaje=new Mensaje(Instant.now().getEpochSecond());
      nuevomensaje.setContenido(mensaje);
      nuevomensaje.setEmisor("Yo");
-    mensajesUsuario.add(nuevomensaje);
+    chatGeneral.add(nuevomensaje);
     }
     
-    public void setFechaFinal(Instant fechaFinal){
-        this.fechaFinal=fechaFinal.getEpochSecond();
+    public void setFechaFinal(long fechaFinal){
+        this.fechaFinal=fechaFinal;
     }
     //-----------------------------------------------------
     //------------------------menu CRUD--------------------
     //-----------------------------------------------------
     
-    private void ordenarConversacion(){
-     /* for(Mensaje mensaje:mensajesLLM){
-          System.out.println(mensaje.getLineMessage());     
-      }
-        System.out.println();
-         for(Mensaje mensaje:mensajesUsuario){
-          System.out.println(mensaje.getLineMessage());     
-      }
-        //como tiene mensaje de bienvenida y despedida mensajesLLM tiene siempre mas elementos
-        */
-    //ordenamos los mensajes. también lo podriamos haber hecho añadiendo los dos arrays y con
-    //Comparator<Mensaje> comparatordate = Comparator.comparing(Mensaje::getFecha);
-    //Collections.sort(chatGeneral, comparatordate);
-    int cont1=0,cont2=0;
-        
-    //para utilizar set necesitamos que haya instaciadas como null
-        try{
-            for(int i=0;i<mensajesLLM.size()+mensajesUsuario.size();i++){
-                if(i%2==0){
-                 chatGeneral.set(i,mensajesLLM.get(cont1));
-                 cont1++; 
-                }else{
-                chatGeneral.set(i,mensajesUsuario.get(cont2));
-                cont2++;
-                }
-            }
-        }catch(ArrayIndexOutOfBoundsException ex){
-            System.err.println("ACCEDIENDO A UNA POSICION QUE NO HA SIDO INSTANCIADA"+ex.getMessage());
-        }
-    }
-
-    
-    public String getFechaInicioFormato() {
-         LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(this.fechaInicio), ZoneId.systemDefault());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd/MM/yy: HH:mm:ss]");
-        String tiempo = dateTime.format(formatter);
-        return tiempo;
-    }
-  
-  
     public long duracion(){
         return this.fechaFinal-this.fechaInicio;
     }
     
+   
     public String getResumeLine(int num){
-         // llama primero a chat ordenado porque la cabecera necesita
+         
          // saber el numero de mensajes totales y esto pertenece a la logica de la aplicación
          // pasa el numero de la conversacion, fecha de inicio,
          // los primeros 20 caracteres de la conversacion(por diseño siempre es la misma frase de bienvenida)
          //y la duracion de la misma
-        ordenarConversacion();
+        try{
         return String.format("%3d. [%s] |Mensajes:%3d | %1.20s |Duracion: %3d seg",num 
-                ,this.getFechaInicioFormato(),chatGeneral.size(),mensajesLLM.get(0).getContenido(),this.duracion());
+                ,this.getFechaInicioFormato(),chatGeneral.size(),chatGeneral.get(0).getContenido(),this.duracion());
+        }catch(ArrayIndexOutOfBoundsException ex){
+            System.err.println("No se han conseguido ordenar la conversacion "+ ex.getMessage());
+        }
+       return null;
     }
     
-    public ArrayList<Mensaje> getConversacionOrdenada(){
-        //no haria falta volver a llamar a ordenarConversacion
-        //porque en la vista getResumeLine va primero
-        return chatGeneral;
-    }
     
-    //establecemos que se comparan dos conversaciones por su tiempo de inicio
-    //esto es un cambio
+    //establecemos que se comparan dos conversaciones por su tiempo de inicio al importar frases para que no 
+    //aparezcan repetidas
     
     @Override
     public int hashCode() {
@@ -184,6 +135,15 @@ public class Conversacion implements Serializable{
         return this.fechaInicio == other.fechaInicio;
     }
 
+   //----------------------------------------------
+    //-----------setters y getters------------------
+    //---------------------------------------------
+    
+    // es importante poner todos los getters de los atributos pues al importar y exportar
+    // en xml reconocen los atributos por lo getters
+    // en caso que un metodo tambien empieze con get pero no es un getter de atributo
+    // lo estipulamos como @JsonIgnore para que xml no lo tenga en cuenta 
+    
     public ArrayList<Mensaje> getChatGeneral() {
         return chatGeneral;
     }
@@ -192,21 +152,31 @@ public class Conversacion implements Serializable{
         return fechaInicio;
     }
 
-    public long getFechaFnal() {
+    public long getFechaFinal() {
         return fechaFinal;
     }
 
-    public void setChatGeneral(ArrayList<Mensaje> chatGeneral) {
-        this.chatGeneral = chatGeneral;
+    
+    
+    
+
+    public void setFechaInicio(long fechaInicio) {
+        this.fechaInicio = fechaInicio;
     }
 
-    public void setFechaInicio(long fechainicio) {
-        this.fechaInicio = fechainicio;
+    public String getNombreLLM() {
+        return nombreLLM;
     }
+        
 
-    public void setFechaFinal(long fechafinal) {
-        this.fechaFinal = fechafinal;
+    @JsonIgnore
+    public String getFechaInicioFormato() {
+        LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(this.fechaInicio), ZoneId.systemDefault());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[dd/MM/yy: HH:mm:ss]");
+        String tiempo = dateTime.format(formatter);
+        return tiempo;
     }
+    
        
     
 
