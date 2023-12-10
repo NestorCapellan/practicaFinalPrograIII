@@ -48,7 +48,7 @@ public class SimpleConsole extends ApplicationView{
             opcion=readInt("introduce la opción que desee-->");
             switch(opcion){
                 case 1:
-                    nuevaconversacion();
+                    nuevaConversacion();
                     break;
                 case 2: 
                     menuCRUD();
@@ -69,8 +69,8 @@ public class SimpleConsole extends ApplicationView{
           
         }while(opcion!=4);
     }
-    // las funciones están estipuladas private porque solo tiene sentido
-    // que se acceden desde la vista y desde ningún otro sitio
+    // las funciones están estipuladas protected porque solo tiene sentido
+    // que se acceden desde la vista y desde una subclase
  protected void getOut(){ 
         boolean salir = yesOrNo("¿Esta seguro de que desa salir?");
         if (salir){
@@ -81,13 +81,13 @@ public class SimpleConsole extends ApplicationView{
 //---------------------------------------
 //------------nueva conversacion-------------
 //---------------------------------------
-protected void nuevaconversacion(){
+protected void nuevaConversacion(){
     // creamos una nueva conversacion y nos devuelve el número 
     // el cual le corresponde esa conversacion en el array de conversaciones
     // para asignar correctamente los mensajes a la conversacion correspondiente
     System.out.println(String.format("-".repeat(57)));
     
-    int aux=c.nuevaconversacion();
+    int aux=c.nuevaConversacion();
     // aux nos devuelve el tamaño del array de conversaciones
     int num=aux-1;
     String salir="/salir";
@@ -101,12 +101,12 @@ protected void nuevaconversacion(){
             try{
                 c.guardarMensajeUsuario(num,mensaje);
             }catch(ArrayIndexOutOfBoundsException ex){
-                System.err.println("No existe la conversacion "+ex.getMessage());
+                System.err.println("No existe la conversacion: "+ex.getMessage());
             }
             try{
             System.out.println(c.contestacion(num,mensaje));
             }catch(ArrayIndexOutOfBoundsException ex){
-                System.err.println("No existe la conversacion "+ex.getMessage());
+                System.err.println("No existe la conversacion: "+ex.getMessage());
             }
             
         }
@@ -131,8 +131,9 @@ protected void nuevaconversacion(){
 //----------------------------------------------
 //------------Gestión Conversaciones-------------
 //-----------------------------------------------
+// este método no se va a utilizar en la subclase por eso es private
 private void menuCRUD(){
-String encabezado="-".repeat(117)+"GESTIÓN CONVERSACIONES"+"-".repeat(17);
+String encabezado="-".repeat(17)+"GESTIÓN CONVERSACIONES"+"-".repeat(17);
 System.out.println(String.format("-".repeat(57)));
 int opcion;
 do{
@@ -153,7 +154,7 @@ do{
                     System.out.println("volviendo a menu principal...");
                     break;
                 default:
-                    System.err.println("Todavía no tenemos suficiente financiación como para tener más  opciones. Opción no disponible ");
+                    System.out.println("Todavía no tenemos suficiente financiación como para tener más  opciones. Opción no disponible ");
                     break;
     }
     
@@ -225,18 +226,21 @@ protected void listarConver(){
                 System.out.println(conversaciones.get(i).getResumeLine(i+1));
             }
             System.out.println();
-            int opcion=readInt("indica el numero de la conversacion que desea eliminar",1,conversaciones.size());
-            if(c.eliminarConversacion(opcion-1)){
-                  System.out.println("se ha eliminado con éxito la conversación");
-            }else{
-                  System.err.println("no se ha podido eliminar la conversación");
-            }  
             salir=yesOrNo("desea eliminar alguna conversacion mas?");
             if(salir){
+                int opcion=readInt("indica el numero de la conversacion que desea eliminar",1,conversaciones.size());
+                if(c.eliminarConversacion(opcion-1)){
+                    System.out.println("se ha eliminado con éxito la conversación");
+                }else{
+                    System.err.println("no se ha podido eliminar la conversación");
+                }  
                 salida=false;
             }
             else{
                 salida=true;
+                System.out.println();
+                System.out.println("volvemos al menu de gestión de conversaciones...");
+                System.out.println();
             }
             System.out.println(String.format("-".repeat(57)));
         }
@@ -267,7 +271,7 @@ private void exportacion(){
                     System.out.println("volviendo a menu principal...");
                     break;
                 default:
-                    System.err.println("Todavía no tenemos suficiente financiación como para tener más  opciones. Opción no disponible ");
+                    System.out.println("Todavía no tenemos suficiente financiación como para tener más  opciones. Opción no disponible ");
                     break;
         }
 

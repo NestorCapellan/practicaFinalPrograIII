@@ -26,6 +26,7 @@ public class JLLM {
     /**
      * @param args the command line arguments
      * @throws io.github.jonelo.jAdapterForNativeTTS.engines.exceptions.SpeechEngineCreationException
+     * @throws java.lang.Exception
      */
     public static void main(String[] args) throws SpeechEngineCreationException {
        IRepository repository;//utilizamos la referencia de la interfaz como tipo estático

@@ -21,6 +21,7 @@ import java.util.List;
  */
 public class TTS extends SimpleConsole {
     private SpeechEngine speechEngine;
+    private final int tiempoEspera=3000;
 
     //creamos la voz a partir del  método setVoice que configura la voz
     public TTS(){
@@ -49,9 +50,9 @@ public class TTS extends SimpleConsole {
 
         // en caso de que se tome otra opcion no existente
         if (voice == null) {
-            System.out.printf("Warning: Voice has not been found by the voice preferences %s%n", voicePreferences);
+            System.out.printf("No se ha encontrado la voz de preferencia: %s%n", voicePreferences);
             voice = voices.get(0); // garantiza que tenga al menos una voz
-            System.out.printf("Using \"%s\" instead.%n", voice);
+            System.out.printf("usamos \"%s\" en lugar de.%n", voice);
         }
 
         speechEngine.setVoice(voice.getName());
@@ -60,8 +61,8 @@ public class TTS extends SimpleConsole {
     }
     
 
-    /**
-     *
+    /*
+     sobrescribimos para incorporar la voz hablada
      */
     @Override
     public void showMainMenu() {
@@ -83,7 +84,7 @@ public class TTS extends SimpleConsole {
                  try {
                     this.speechEngine.say(opcion);
                         try {
-                            Thread.sleep(3000);
+                            Thread.sleep(tiempoEspera);
                         } catch (InterruptedException ex) {
                             System.err.println("error en la espera de voz");
                         }
@@ -94,7 +95,8 @@ public class TTS extends SimpleConsole {
             opc=readInt("introduce la opción que desee-->");
             switch(opc){
                 case 1:
-                    super.nuevaconversacion();
+                    // llamamos al metodo nuevaConversacion de la clase padre
+                    super.nuevaConversacion();
                     break;
                 case 2: 
                     menuCRUD();
@@ -134,7 +136,7 @@ do{
         try {
                 this.speechEngine.say(opcionCRUD);
                     try {
-                        Thread.sleep(3000);
+                        Thread.sleep(tiempoEspera);
                     } catch (InterruptedException ex) {
                         System.err.println("error en la espera de voz");
                     }

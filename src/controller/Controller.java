@@ -38,8 +38,11 @@ public class Controller {
             view.showApplicationStart("No se han cargado conversaciones antiguas porque nunca hemos hablado o se han eliminado todas");
     }
     else{
+        //aunque el modelo ya se comunica con la vista por medio del método errores del controlador
+        //también mostramos mensaje al principio de la ejecución
         view.showApplicationStart("ERROR AL CARGAR SERIALIZACION");
     }
+    
    
     view.showMainMenu();
     
@@ -71,8 +74,8 @@ public class Controller {
     
   //---------nuevaconversaion-------------
   //--------------------------------------
-public int nuevaconversacion(){
-    return model.nuevaconversacion();
+public int nuevaConversacion(){
+    return model.nuevaConversacion();
 }
 public String mensajeBienvenida(int num){
 return model.mensajeBienvenida(num);

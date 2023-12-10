@@ -113,7 +113,7 @@ public class Model {
  
     //------------nueva conversacion----------------
     //----------------------------------------------
-public int nuevaconversacion(){
+public int nuevaConversacion(){
     //añade la conversacion en último lugar
     conversaciones.add(new Conversacion(this.LLM.getIdentifier(),Instant.now().getEpochSecond()));
     
@@ -213,13 +213,12 @@ public boolean exportarConversaciones(){
 public boolean importarConversaciones(){
     // implementamos las conversaciones dependiendo si ya estan o no segun su fecha de inicio con HashCode y equals
     ArrayList<Conversacion> conversacionesImportadas=this.repository.importar(archivoimportar);
-    int cont=0;
     if(conversacionesImportadas!=null){
             for(Conversacion conversacionImportada:conversacionesImportadas){
                 if(!conversaciones.contains(conversacionImportada)){
-                    this.conversaciones.add(cont,conversacionImportada);
+                    this.conversaciones.add(conversacionImportada);
                 }
-                cont++;
+
             }
             return true;
     }
