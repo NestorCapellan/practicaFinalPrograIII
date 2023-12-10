@@ -1,0 +1,102 @@
+tipo,longitud,frase
+refran,24,Más vale tarde que nunca
+refran,42,No por mucho madrugar amanece más temprano
+refran,42,A caballo regalado no se le mira el diente
+refran,32,El que mucho abarca poco aprieta
+"refran,37,""En casa del herrero, cuchillo de palo"""
+saludo,19,¡Hola! ¿Cómo estás?
+"saludo,44,""Buenos días, ¡espero que tengas un gran día!"""
+saludo,19,¡Qué alegría verte!
+"saludo,30,""Hola, mucho gusto en conocerte"""
+saludo,30,Saludos cordiales a todos aquí
+"despedida,26,""Hasta luego, cuídate mucho"""
+"despedida,23,""Adiós, nos vemos pronto"""
+"despedida,33,""Que tengas un buen día, nos vemos"""
+"despedida,35,""Hasta la próxima, ha sido un placer"""
+"despedida,29,""Me voy, pero nos vemos pronto"""
+pregunta,16,¿Cómo te llamas?
+pregunta,13,¿Qué hora es?
+pregunta,20,¿Dónde está el baño?
+"pregunta,29,""¿Podrías ayudarme, por favor?"""
+pregunta,27,¿Cuál es tu color favorito?
+respuesta,13,Me llamo Juan
+respuesta,24,Son las tres de la tarde
+respuesta,25,El baño está a la derecha
+"respuesta,33,""Claro, dime en qué puedo ayudarte"""
+respuesta,28,Mi color favorito es el azul
+afirmacion,30,Estoy completamente de acuerdo
+afirmacion,27,Eso es absolutamente cierto
+"afirmacion,28,""Sin duda, es la mejor opción"""
+"afirmacion,32,""Definitivamente, eso es correcto"""
+"afirmacion,25,""Claro que sí, es evidente"""
+negacion,27,No estoy de acuerdo con eso
+negacion,16,Eso no es cierto
+"negacion,36,""De ninguna manera, eso es incorrecto"""
+"negacion,27,""No, eso no es lo que quiero"""
+"negacion,21,""No, eso no es posible"""
+sorpresa,18,¡No puedo creerlo!
+sorpresa,18,¡Eso es asombroso!
+sorpresa,15,¡Vaya sorpresa!
+"sorpresa,30,""¡Increíble, no me lo esperaba!"""
+"sorpresa,27,""¡Wow, eso es impresionante!"""
+refran,38,Frase adicional de ejemplo para refran
+saludo,38,Frase adicional de ejemplo para saludo
+despedida,41,Frase adicional de ejemplo para despedida
+pregunta,40,Frase adicional de ejemplo para pregunta
+respuesta,41,Frase adicional de ejemplo para respuesta
+afirmacion,42,Frase adicional de ejemplo para afirmacion
+negacion,40,Frase adicional de ejemplo para negacion
+sorpresa,40,Frase adicional de ejemplo para sorpresa
+refran,38,Frase adicional de ejemplo para refran
+saludo,38,Frase adicional de ejemplo para saludo
+despedida,41,Frase adicional de ejemplo para despedida
+pregunta,40,Frase adicional de ejemplo para pregunta
+respuesta,41,Frase adicional de ejemplo para respuesta
+afirmacion,42,Frase adicional de ejemplo para afirmacion
+negacion,40,Frase adicional de ejemplo para negacion
+sorpresa,40,Frase adicional de ejemplo para sorpresa
+refran,38,Frase adicional de ejemplo para refran
+saludo,38,Frase adicional de ejemplo para saludo
+despedida,41,Frase adicional de ejemplo para despedida
+pregunta,40,Frase adicional de ejemplo para pregunta
+respuesta,41,Frase adicional de ejemplo para respuesta
+afirmacion,42,Frase adicional de ejemplo para afirmacion
+negacion,40,Frase adicional de ejemplo para negacion
+sorpresa,40,Frase adicional de ejemplo para sorpresa
+refran,38,Frase adicional de ejemplo para refran
+saludo,38,Frase adicional de ejemplo para saludo
+despedida,41,Frase adicional de ejemplo para despedida
+pregunta,40,Frase adicional de ejemplo para pregunta
+respuesta,41,Frase adicional de ejemplo para respuesta
+afirmacion,42,Frase adicional de ejemplo para afirmacion
+negacion,40,Frase adicional de ejemplo para negacion
+sorpresa,40,Frase adicional de ejemplo para sorpresa,esta fila tiene un error,
+refran,38,Frase adicional de ejemplo para refran
+saludo,38,Frase adicional de ejemplo para saludo
+despedida,41,Frase adicional de ejemplo para despedida
+pregunta,40,Frase adicional de ejemplo para pregunta
+respuesta,41,Frase adicional de ejemplo para respuesta
+afirmacion,42,Frase adicional de ejemplo para afirmacion
+negacion,40,Frase adicional de ejemplo para negacion
+sorpresa,40,Frase adicional de ejemplo para sorpresa
+refran,38,Frase adicional de ejemplo para refran
+saludo,38,Frase adicional de ejemplo para saludo
+despedida,41,Frase adicional de ejemplo para despedida
+pregunta,40,Frase adicional de ejemplo para pregunta
+respuesta,41,Frase adicional de ejemplo para respuesta
+afirmacion,42,Frase adicional de ejemplo para afirmacion
+negacion,40,Frase adicional de ejemplo para negacion
+sorpresa,40,Frase adicional de ejemplo para sorpresa
+refran,38,Frase adicional de ejemplo para refran
+saludo,38,Frase adicional de ejemplo para saludo
+despedida,41,Frase adicional de ejemplo para despedida
+pregunta,40,Frase adicional de ejemplo para pregunta
+respuesta,41,Frase adicional de ejemplo para respuesta
+afirmacion,42,Frase adicional de ejemplo para afirmacion
+negacion,40,Frase adicional de ejemplo para negacion
+sorpresa,40,Frase adicional de ejemplo para sorpresa
+refran,38,Frase adicional de ejemplo para refran
+saludo,38,Frase adicional de ejemplo para saludo
+despedida,41,Frase adicional de ejemplo para despedida
+pregunta,40,Frase adicional de ejemplo para pregunta
+iorvjeroijeriogjeorigjioergjioerjgioerjgoirejgeriogjeriogjioegrjgioejer

@@ -39,14 +39,14 @@ public class Model {
     public Model(ILLM LLM, IRepository repository) {
         this.LLM = LLM;
         this.repository = repository;
-        this.ficheroEstadoSerializado=Paths.get(System.getProperty("user.home"),"Desktop","jLLM","jLLM","jLLM.bin").toFile();
+        this.ficheroEstadoSerializado=Paths.get(System.getProperty("user.home"),"Desktop","CapellanRoldanNestor","jLLM","jLLM.bin").toFile();
         conversaciones=new ArrayList<>();
         if(this.repository instanceof ExportJSON){
-        this.archivoexportar=Paths.get(System.getProperty("user.home"),"Desktop","jLLM","jLLM","output.json").toFile();
-        this.archivoimportar=Paths.get(System.getProperty("user.home"),"Desktop","jLLM","jLLM","input.json").toFile();
+        this.archivoexportar=Paths.get(System.getProperty("user.home"),"Desktop","CapellanRoldanNestor","jLLM","output.json").toFile();
+        this.archivoimportar=Paths.get(System.getProperty("user.home"),"Desktop","CapellanRoldanNestor","jLLM","input.json").toFile();
         }else{
-        this.archivoexportar=Paths.get(System.getProperty("user.home"),"Desktop","jLLM","jLLM","output.xml").toFile();
-        this.archivoimportar=Paths.get(System.getProperty("user.home"),"Desktop","jLLM","jLLM","input.xml").toFile();  
+        this.archivoexportar=Paths.get(System.getProperty("user.home"),"Desktop","CapellanRoldanNestor","jLLM","output.xml").toFile();
+        this.archivoimportar=Paths.get(System.getProperty("user.home"),"Desktop","CapellanRoldanNestor","jLLM","input.xml").toFile();  
         }
     }
     

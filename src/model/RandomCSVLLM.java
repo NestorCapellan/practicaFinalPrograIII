@@ -23,7 +23,7 @@ import java.util.Random;
  */
  public class RandomCSVLLM implements ILLM {
 
-    private final Path ruta=Paths.get(System.getProperty("user.home"),"Desktop","jLLM","randomCSV.txt");
+    private final Path ruta=Paths.get(System.getProperty("user.home"),"Desktop","CapellanRoldanNestor","jLLM","randomCSV.txt");
     private final String delimitador = ",";
     private ArrayList<Frase> frases=new ArrayList<>();
     private final String[] tipo={"refran","saludo","despedida","afirmacion","negacion","sorpresa","pregunta","respuesta"};
