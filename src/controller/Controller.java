@@ -77,7 +77,7 @@ public class Controller {
 public int nuevaConversacion(){
     return model.nuevaConversacion();
 }
-public String mensajeBienvenida(int num){
+public String mensajeBienvenida(int num)throws ArrayIndexOutOfBoundsException{
 return model.mensajeBienvenida(num);
 }
 
@@ -88,7 +88,7 @@ public void setFinalConversacion(int num)throws ArrayIndexOutOfBoundsException{
 model.setFinalConversacion(num);
 }
 
-public String mensajeDespedida(int num){
+public String mensajeDespedida(int num)throws ArrayIndexOutOfBoundsException{
 return model.mensajeDespedida(num);
 }
 public void guardarMensajeUsuario(int num,String mensaje) throws ArrayIndexOutOfBoundsException{

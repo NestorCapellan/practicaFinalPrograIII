@@ -65,12 +65,7 @@ import java.util.Random;
      
     @Override
     public String speak(String intro) {
-        try {
-            frases=importar();
-        } catch (Exception ex) {
-            System.err.println("ERROR AL IMPORTAR FRASES DEL RANDOMCSV"+ex.getMessage());
-        }
-        
+       frases=importar();
         if (!frases.isEmpty() && frases!=null) {
             ordenarFrasesPorTipos();
             //si el mensaje escrito por el usuario presenta un ? entonces

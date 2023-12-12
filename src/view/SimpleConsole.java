@@ -20,7 +20,11 @@ public class SimpleConsole extends ApplicationView{
     public void showApplicationStart(String initInfo) {
         String encabezado="-".repeat(15)+"EMPIEZA A UTILIZAR JLLM HOY"+"-".repeat(15);
         System.out.println(initInfo);
+        try{
         System.out.println(encabezado);
+        }catch(Exception ex){
+            System.err.println("Ocurrio un error :"+ex.getMessage());
+        }
         System.out.println(String.format("-".repeat(57)));
                 
     }
@@ -71,7 +75,7 @@ public class SimpleConsole extends ApplicationView{
     }
     // las funciones están estipuladas protected porque solo tiene sentido
     // que se acceden desde la vista y desde una subclase
- protected void getOut(){ 
+ protected final void getOut(){ 
         boolean salir = yesOrNo("¿Esta seguro de que desa salir?");
         if (salir){
             System.out.println("Hasta la próxima....");
@@ -92,8 +96,11 @@ protected void nuevaConversacion(){
     int num=aux-1;
     String salir="/salir";
     String mensaje;
+    try{
     System.out.println(">>>"+c.mensajeBienvenida(num));
-
+    }catch(ArrayIndexOutOfBoundsException ex){
+     System.err.println("No existe la conversacion: "+ex.getMessage());
+    }
     do{
         mensaje=readString_ne(">>>");
         if(!mensaje.equalsIgnoreCase(salir)){
@@ -124,7 +131,11 @@ protected void nuevaConversacion(){
            }
         }
     }while(!mensaje.equalsIgnoreCase(salir));
+     try{
     System.out.println(">>>"+c.mensajeDespedida(num));
+    }catch(ArrayIndexOutOfBoundsException ex){
+     System.err.println("No existe la conversacion: "+ex.getMessage());
+    }
     System.out.println(String.format("-".repeat(57)));
 }
     

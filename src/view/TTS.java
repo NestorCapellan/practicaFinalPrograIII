@@ -25,18 +25,20 @@ public class TTS extends SimpleConsole {
 
     //creamos la voz a partir del  método setVoice que configura la voz
     public TTS(){
-        try{
+        
         this.speechEngine = setVoice();
-        }catch(SpeechEngineCreationException ex ){
-            System.err.println("Error al cargar voz "+ex.getMessage());
-        }
+        
     }
     
    
   
-    public static SpeechEngine setVoice() throws SpeechEngineCreationException{
+    public static SpeechEngine setVoice(){
         SpeechEngine speechEngine = null;
+        try{
         speechEngine = SpeechEngineNative.getInstance();
+        }catch(SpeechEngineCreationException ex){
+            System.err.println("SE HA PRODUCIDO ERROR AL GENERAR LA VOZ: "+ex.getLocalizedMessage());
+        }
         
         List<Voice> voices = speechEngine.getAvailableVoices();
 
@@ -156,7 +158,7 @@ do{
                     System.out.println("volviendo a menu principal...");
                     break;
                 default:
-                    System.err.println("Todavía no tenemos suficiente financiación como para tener más  opciones. Opción no disponible ");
+                    System.out.println("Todavía no tenemos suficiente financiación como para tener más  opciones. Opción no disponible ");
                     break;
     }
     
@@ -201,7 +203,7 @@ do{
                     System.out.println("volviendo a menu principal...");
                     break;
                 default:
-                    System.err.println("Todavía no tenemos suficiente financiación como para tener más  opciones. Opción no disponible ");
+                    System.out.println("Todavía no tenemos suficiente financiación como para tener más  opciones. Opción no disponible ");
                     break;
         }
 

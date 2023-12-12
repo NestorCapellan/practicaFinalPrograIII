@@ -100,15 +100,9 @@ public class Conversacion implements Serializable{
          // pasa el numero de la conversacion, fecha de inicio,
          // los primeros 20 caracteres de la conversacion(por diseño siempre es la misma frase de bienvenida)
          //y la duracion de la misma
-        try{
         return String.format("%3d. [%s] |Mensajes:%3d | %1.20s |Duracion: %3d seg",num 
                 ,this.getFechaInicioFormato(),chatGeneral.size(),chatGeneral.get(0).getContenido(),this.duracion());
-        }catch(ArrayIndexOutOfBoundsException ex){
-            System.err.println("No se han conseguido ordenar la conversacion "+ ex.getMessage());
-        }
-       return null;
     }
-    
     
     //establecemos que se comparan dos conversaciones por su tiempo de inicio al importar frases para que no 
     //aparezcan repetidas

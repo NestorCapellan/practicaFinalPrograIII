@@ -25,10 +25,8 @@ public class JLLM {
 
     /**
      * @param args the command line arguments
-     * @throws io.github.jonelo.jAdapterForNativeTTS.engines.exceptions.SpeechEngineCreationException
-     * @throws java.lang.Exception
      */
-    public static void main(String[] args) throws SpeechEngineCreationException {
+    public static void main(String[] args){
        IRepository repository;//utilizamos la referencia de la interfaz como tipo estático
        ApplicationView view;//utilizamos la clase abstracta como tipo estático
        ILLM tipo;//utilizamos la referencia de la interfaz como tipo estático
@@ -79,7 +77,7 @@ public class JLLM {
     
     }
 
-    private static ApplicationView getViewForoption(String argumento) throws SpeechEngineCreationException {
+    private static ApplicationView getViewForoption(String argumento){
         switch (argumento) {
             case "consola":
                 return new SimpleConsole();

@@ -121,13 +121,8 @@ public int nuevaConversacion(){
     return this.conversaciones.size();
 }
 
-public String mensajeBienvenida(int num) {
-    try{
+public String mensajeBienvenida(int num) throws ArrayIndexOutOfBoundsException{
     return conversaciones.get(num).bienvenida();
-    }catch(ArrayIndexOutOfBoundsException ex){
-    c.errores("Capturada excepcion "+ex.getMessage());
-    }
-   return null;
 }
 
 public void guardarMensajeUsuario(int num,String mensaje) throws ArrayIndexOutOfBoundsException{
@@ -149,13 +144,8 @@ public String contestacion(int num,String mensaje) throws ArrayIndexOutOfBoundsE
    return Mensaje.setMessage(respuesta);
 }
 
-public String mensajeDespedida(int num){
-    try{
+public String mensajeDespedida(int num) throws ArrayIndexOutOfBoundsException{
     return conversaciones.get(num).despedida();
-    }catch(ArrayIndexOutOfBoundsException ex){
-    c.errores("Capturada excepcion "+ex.getMessage());
-    }
-   return null;
 }
 
 public void setFinalConversacion(int num)throws ArrayIndexOutOfBoundsException{
